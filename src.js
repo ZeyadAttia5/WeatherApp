@@ -1,5 +1,3 @@
-
-
 async function getWeather(location) {
     let response = await fetch(`http://api.weatherapi.com/v1/current.json?key=50af999fddb14dd3a03182431231811&q=${location}&aqi=no`)
     let data = await response.json()
@@ -8,7 +6,7 @@ async function getWeather(location) {
 }
 
 function processData(dataJSON){
-    console.log(dataJSON)
+    // console.log(dataJSON)
         return {
             temp_c: dataJSON.current.temp_c,
             temp_f: dataJSON.current.temp_f,
@@ -22,7 +20,7 @@ function processData(dataJSON){
 //     weather = processData(response)
 //     console.log(weather);
 // });
-
+let weather
 function handleSubmit(event) {
     event.preventDefault(); // Prevent the default form submission
 
@@ -33,27 +31,27 @@ function handleSubmit(event) {
     const userLocation = locationInput.value;
 
     // You can now use the 'userLocation' variable as needed (e.g., send it to the server, display it, etc.)
-    getWeather(userLocation).then( response =>{
+    weather = getWeather(userLocation).then( response =>{
 
         const weather = processData(response)
-        display_data(weather)
+        display_data(weather, true)
+        return weather;
     })
 }
+
 
 // Attach the handleSubmit function to the form's submit event
 const formElement = document.getElementById('locationForm');
 formElement.addEventListener('submit', handleSubmit);
 
 
-function display_data(weather) {
+function display_data(weather, isCelsius) {
+    // console.log(weather)
     const resultContainer = document.getElementById('resultContainer');
 
     // Create elements to display weather information
-    const temperatureCelsius = document.createElement('p');
-    temperatureCelsius.textContent = `Temperature (Celsius): ${weather.temp_c}`;
-
-    const temperatureFahrenheit = document.createElement('p');
-    temperatureFahrenheit.textContent = `Temperature (Fahrenheit): ${weather.temp_f}`;
+    const temperature = document.createElement('p');
+    temperature.textContent = `Temperature: ${isCelsius ? weather.temp_c + ' °C' : weather.temp_f + ' °F'}`;
 
     const humidity = document.createElement('p');
     humidity.textContent = `Humidity: ${weather.humidity}%`;
@@ -68,9 +66,21 @@ function display_data(weather) {
     resultContainer.innerHTML = '';
 
     // Append weather information to the result container
-    resultContainer.appendChild(temperatureCelsius);
-    resultContainer.appendChild(temperatureFahrenheit);
+    resultContainer.appendChild(temperature);
     resultContainer.appendChild(humidity);
     resultContainer.appendChild(windSpeed);
     resultContainer.appendChild(lastUpdated);
 }
+
+
+const toggleTemp = document.getElementById('toggleButton');
+let isCelsius = true;
+toggleTemp.addEventListener('click', () => {
+    weather.then(response => {
+        
+        // console.log(response)
+        isCelsius = !isCelsius;
+        display_data(response, isCelsius);
+
+    });
+})
