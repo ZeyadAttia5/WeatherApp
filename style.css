@@ -1,0 +1,20 @@
+/* Apply basic styling to the result container */
+#resultContainer {
+    margin-top: 20px;
+    padding: 15px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #f8f8f8;
+}
+
+/* Style each weather information paragraph */
+#resultContainer p {
+    margin: 5px 0;
+    font-size: 16px;
+}
+
+/* Style the last updated paragraph with a smaller font and color */
+#resultContainer p:last-child {
+    font-size: 14px;
+    color: #777;
+}
